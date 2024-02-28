@@ -1,10 +1,10 @@
-package org.example;
+package org.example.fileOperations;
 
 import java.io.File;
 
 public class DeleteFile {
-    public void deleteFile() {
-        String filePath = System.getProperty("user.dir") + "/src/main/files/kopidlno.xml";
+    public void deleteFile(String filename) {
+        String filePath = System.getProperty("user.dir") + "/src/main/files/" + filename;
         File file = new File(filePath);
         try {
             file.delete();

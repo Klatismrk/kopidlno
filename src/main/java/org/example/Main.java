@@ -1,29 +1,32 @@
 package org.example;
 
-import java.util.ArrayList;
+import org.example.databaseOperations.FillDatabase;
+import org.example.entity.Village;
+import org.example.entity.VillagePart;
+import org.example.fileOperations.DeleteFile;
+import org.example.fileOperations.DownloadFile;
+import org.example.parseXml.CreateDocumentFromXml;
+import org.example.parseXml.ReadFromDocument;
+import org.w3c.dom.Document;
+
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        List<Obec> listObci = new ArrayList<>();
-        List<CastObce> listCastiObce = new ArrayList<>();
+        String url = "https://www.smartform.cz/download/kopidlno.xml.zip";
+        String fileName = "kopidlno.xml";
 
-        CreateTables createTables = new CreateTables();
         DownloadFile downloadFile = new DownloadFile();
+        CreateDocumentFromXml createDocumentFromXml = new CreateDocumentFromXml();
+        ReadFromDocument readFromDocument = new ReadFromDocument();
+        FillDatabase fillDatabase = new FillDatabase();
         DeleteFile deleteFile = new DeleteFile();
-        ReadObecFromXml readObecFromXml = new ReadObecFromXml();
-        ReadCastObceFromXml readCastObceFromXml = new ReadCastObceFromXml();
-        InsertObceIntoTable insertObceIntoTable = new InsertObceIntoTable();
-        InsertCastiObceIntoTable insertCastiObceIntoTable = new InsertCastiObceIntoTable();
 
-        createTables.createTables();
-        downloadFile.downloadFile();
-        listObci = readObecFromXml.readObecFromXml();
-        listCastiObce = readCastObceFromXml.readCastObceFromXml();
-        insertObceIntoTable.insertObceIntoTable(listObci);
-        insertCastiObceIntoTable.insertCastiObceIntoTable(listCastiObce);
-
-
-        deleteFile.deleteFile();
+        downloadFile.downloadAndUnzipFile(url, fileName);
+        Document document = createDocumentFromXml.createDocumentFromXml(fileName);
+        List<Village> listVillages = readFromDocument.readVillagesFromDocument(document);
+        List<VillagePart> listVillagesParts = readFromDocument.readVillagesPartsFromDocument(document);
+        fillDatabase.fillKopidlnoDatabase(listVillages, listVillagesParts);
+        deleteFile.deleteFile(fileName);
     }
 }

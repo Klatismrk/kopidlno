@@ -1,4 +1,4 @@
-package org.example;
+package org.example.fileOperations;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -8,8 +8,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class DownloadFile {
-    public void downloadFile() {
-        String downloadUrl = "https://www.smartform.cz/download/kopidlno.xml.zip";
+    public void downloadAndUnzipFile(String downloadUrl, String fileName) {
         String projectDir = System.getProperty("user.dir");
         String downloadDir = projectDir + "/src/main/files/";
 
@@ -19,7 +18,6 @@ public class DownloadFile {
             ZipInputStream zipInputStream = new ZipInputStream(inputStream);
             ZipEntry entry = zipInputStream.getNextEntry();
             while (entry != null) {
-                String fileName = "kopidlno.xml";
                 Files.copy(zipInputStream, Paths.get(downloadDir + fileName));
                 zipInputStream.closeEntry();
                 entry = zipInputStream.getNextEntry();
